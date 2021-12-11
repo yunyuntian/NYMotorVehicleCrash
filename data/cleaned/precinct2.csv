@@ -1,0 +1,78 @@
+"","GeoCode","GeoCodeLabel","Number_of_Motor_Vehicle_Collisions","Injury_or_Fatal_Collisions","borough","not_severe_collisions","severe_pct"
+"3","001","1st Precinct",92,37,"MANHATTAN",55,40.22
+"4","005","5th Precinct",88,36,"MANHATTAN",52,40.91
+"5","006","6th Precinct",52,15,"MANHATTAN",37,28.85
+"6","007","7th Precinct",57,20,"MANHATTAN",37,35.09
+"7","009","9th Precinct",66,36,"MANHATTAN",30,54.55
+"8","010","10th Precinct",74,22,"MANHATTAN",52,29.73
+"9","013","13th Precinct",80,28,"MANHATTAN",52,35
+"10","014","Midtown South Precinct",78,38,"MANHATTAN",40,48.72
+"11","017","17th Precinct",108,50,"MANHATTAN",58,46.3
+"12","018","Midtown North Precinct",91,35,"MANHATTAN",56,38.46
+"13","019","19th Precinct",151,52,"MANHATTAN",99,34.44
+"14","020","20th Precinct",73,28,"MANHATTAN",45,38.36
+"15","022","Central Park Precinct",3,0,"MANHATTAN",3,0
+"16","023","23rd Precinct",76,19,"MANHATTAN",57,25
+"17","024","24th Precinct",77,27,"MANHATTAN",50,35.06
+"18","025","25th Precinct",134,53,"MANHATTAN",81,39.55
+"19","026","26th Precinct",54,19,"MANHATTAN",35,35.19
+"20","028","28th Precinct",54,26,"MANHATTAN",28,48.15
+"21","030","30th Precinct",57,19,"MANHATTAN",38,33.33
+"22","032","32nd Precinct",86,35,"MANHATTAN",51,40.7
+"23","033","33rd Precinct",74,25,"MANHATTAN",49,33.78
+"24","034","34th Precinct",95,37,"MANHATTAN",58,38.95
+"26","040","40th Precinct",180,63,"BRONX",117,35
+"27","041","41st Precinct",122,51,"BRONX",71,41.8
+"28","042","42nd Precinct",109,38,"BRONX",71,34.86
+"29","043","43rd Precinct",174,59,"BRONX",115,33.91
+"30","044","44th Precinct",184,61,"BRONX",123,33.15
+"31","045","45th Precinct",137,51,"BRONX",86,37.23
+"32","046","46th Precinct",122,51,"BRONX",71,41.8
+"33","047","47th Precinct",228,86,"BRONX",142,37.72
+"34","048","48th Precinct",128,49,"BRONX",79,38.28
+"35","049","49th Precinct",113,54,"BRONX",59,47.79
+"36","050","50th Precinct",105,37,"BRONX",68,35.24
+"37","052","52nd Precinct",159,50,"BRONX",109,31.45
+"39","060","60th Precinct",90,30,"BROOKLYN",60,33.33
+"40","061","61st Precinct",142,67,"BROOKLYN",75,47.18
+"41","062","62nd Precinct",141,58,"BROOKLYN",83,41.13
+"42","063","63rd Precinct",141,54,"BROOKLYN",87,38.3
+"43","066","66th Precinct",175,61,"BROOKLYN",114,34.86
+"44","067","67th Precinct",204,89,"BROOKLYN",115,43.63
+"45","068","68th Precinct",138,57,"BROOKLYN",81,41.3
+"46","069","69th Precinct",96,44,"BROOKLYN",52,45.83
+"47","070","70th Precinct",149,75,"BROOKLYN",74,50.34
+"48","071","71st Precinct",108,32,"BROOKLYN",76,29.63
+"49","072","72nd Precinct",153,78,"BROOKLYN",75,50.98
+"50","073","73rd Precinct",148,55,"BROOKLYN",93,37.16
+"51","075","75th Precinct",328,123,"BROOKLYN",205,37.5
+"52","076","76th Precinct",69,23,"BROOKLYN",46,33.33
+"53","077","77th Precinct",106,43,"BROOKLYN",63,40.57
+"54","078","78th Precinct",95,28,"BROOKLYN",67,29.47
+"55","079","79th Precinct",105,52,"BROOKLYN",53,49.52
+"56","081","81st Precinct",77,31,"BROOKLYN",46,40.26
+"57","083","83rd Precinct",162,35,"BROOKLYN",127,21.6
+"58","084","84th Precinct",116,39,"BROOKLYN",77,33.62
+"59","088","88th Precinct",95,50,"BROOKLYN",45,52.63
+"60","090","90th Precinct",208,74,"BROOKLYN",134,35.58
+"61","094","94th Precinct",125,30,"BROOKLYN",95,24
+"63","100","100th Precinct",44,17,"QUEENS",27,38.64
+"64","101","101st Precinct",70,18,"QUEENS",52,25.71
+"65","102","102nd Precinct",150,65,"QUEENS",85,43.33
+"66","103","103rd Precinct",153,58,"QUEENS",95,37.91
+"67","104","104th Precinct",191,53,"QUEENS",138,27.75
+"68","105","105th Precinct",310,142,"QUEENS",168,45.81
+"69","106","106th Precinct",192,75,"QUEENS",117,39.06
+"70","107","107th Precinct",191,65,"QUEENS",126,34.03
+"71","108","108th Precinct",219,86,"QUEENS",133,39.27
+"72","109","109th Precinct",250,89,"QUEENS",161,35.6
+"73","110","110th Precinct",201,72,"QUEENS",129,35.82
+"74","111","111th Precinct",165,44,"QUEENS",121,26.67
+"75","112","112th Precinct",106,44,"QUEENS",62,41.51
+"76","113","113th Precinct",182,66,"QUEENS",116,36.26
+"77","114","114th Precinct",224,94,"QUEENS",130,41.96
+"78","115","115th Precinct",185,71,"QUEENS",114,38.38
+"80","120","120th Precinct",108,32,"STATEN ISLAND",76,29.63
+"81","121","121st Precinct",160,53,"STATEN ISLAND",107,33.12
+"82","122","122nd Precinct",162,49,"STATEN ISLAND",113,30.25
+"83","123","123rd Precinct",67,22,"STATEN ISLAND",45,32.84
