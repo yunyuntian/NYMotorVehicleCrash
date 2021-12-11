@@ -5,3 +5,9 @@ missing-values
 results
 interactive-component
 conclusion
+tab:unnamed-chunk-7
+tab:unnamed-chunk-8
+tab:unnamed-chunk-10
+tab:unnamed-chunk-11
+vehicle-collison-dataset
+contributing-factor-dataset
