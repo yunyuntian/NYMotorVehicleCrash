@@ -1,1 +1,254 @@
 # Data transformation
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(dplyr)
+library(kableExtra)
+library(knitr)
+library(openxlsx)
+```
+
+
+We have three data sets in total, but we will only look at "GeoCollisions_1" and "GeoContributingFactors_3" for our analysis. In this section, we will go over the data pre-processing. If you are looking for more information on the original code, please see our [github repo chapter](https://github.com/yunyuntian/NYMotorVehicleCrash/blob/main/03-cleaning.Rmd).
+
+## Vehicle Collison Dataset 
+
+We will explore two topics using the "GeoCollisions_1" dataset: 1. collision distribution 2. type of people  involved in crashes. Because the second question can be answered directly from the raw dataset and does not require transformation, we only transform the dataset for the first. The following are the steps:
+
+- Remove the metadata (first 3 rows and last 8 rows)
+- Create two sub datasets: a. contains rows for borough wide data; b. contains rows for precinct wide data
+- In precinct wide sub-data, add a column `borough` to identify which borough this precinct belongs to
+- Add columns `not_severe_collisions` and `severe_pct` to identify the total number of not severe collisions and proportion of severe collisions for every precinct
+- In borough wide sub-data, add `collision_type` and `value` to illustrate the number of collisions for each type of every borough
+
+```{r}
+data1  <- read.xlsx("./data/raw/cityacc-en-us (1).xlsx", rows = 4:87, sheet = 1)
+citys = data1 %>% filter(GeoCode %in% c('M','B','K','Q','S'))
+total_cnt_idx = as.list(citys[order(-citys$Number_of_Motor_Vehicle_Collisions),]['GeoCodeLabel'])
+
+name <- c(rep("MANHATTAN" , 2) , rep("BRONX" , 2) , rep("BROOKLYN" , 2) , rep("QUEENS" , 2), rep("STATEN ISLAND",2))
+collision_type <- rep(c("Severe" , "Not Severe" ) , 5)
+value <- c(657,1063, 650,1111,1228, 1943,1059,1778,156,341)
+collisions <- data.frame(name,collision_type,value) %>% arrange(factor(name, levels = total_cnt_idx))
+```
+
+```{r}
+precinct <- subset(data1, !(GeoCode %in%  c('C','M','B','K','Q','S')))
+precinct['borough'] = NA
+
+for (i in 1:(nrow(precinct))){
+  if (as.numeric(precinct[i,'GeoCode']) <= 034) {
+    precinct[i,'borough'] = 'MANHATTAN'
+  }
+  else if (as.numeric(precinct[i,'GeoCode']) <= 052) {
+    precinct[i,'borough'] = 'BRONX'
+  }
+  else if (as.numeric(precinct[i,'GeoCode']) <= 094) {
+    precinct[i,'borough'] = 'BROOKLYN'
+  }
+  else if (as.numeric(precinct[i,'GeoCode']) <= 115) {
+    precinct[i,'borough'] = 'QUEENS'
+  }
+  else {
+    precinct[i,'borough'] = 'STATEN ISLAND'
+  }
+}
+
+precinct2 <- precinct[, c('GeoCode','GeoCodeLabel','Number_of_Motor_Vehicle_Collisions','Injury_or_Fatal_Collisions','borough')]
+
+precinct2['not_severe_collisions'] <- (precinct2['Number_of_Motor_Vehicle_Collisions'] - precinct2['Injury_or_Fatal_Collisions'])
+
+precinct2['severe_pct'] <- round((precinct2['Injury_or_Fatal_Collisions'] / precinct2['Number_of_Motor_Vehicle_Collisions']) *100,2)
+
+```
+
+After cleaning the data, we have 3 variables with 10 observations for borough wide data, and 7 variables with 77 observation for precinct wide data.
+
+```{r }
+## 没改
+# a.borough wide
+knitr::kable(data.frame(
+                column = c('Name','CollisionType','Value'),
+                description = c('borough name','severe/not severe',
+                              'number of accidents')
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10,
+             caption = 'Vehicle Collision Dataset A (borough wide)')
+```
+
+```{r}
+# b. precinct wide
+knitr::kable(data.frame(
+                column = c('Borough','GeoCode','GeocodeLabel','NumberofMotorVehicleCollisions','InjuryorFatalCollisions',
+                                'NotSevereCollisions','SeverePct'),
+                description = c('borough name','precinct code','precinct name','number of car accidents',
+                              'number of severe car accidents',
+                              'number of not severe car accidents','number of severe/number of total car accidents')
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10,
+             caption = 'Vehicle Collision Dataset B (precinct wide)')
+
+
+```
+
+
+## Contributing Factor Dataset  
+
+The "GeoContributingFactors_3" dataset presents data at three levels: citywide, borough wide, and precinct wide. We will perform our analysis based on the first two levels, so we will filter out the data from those levels and double-check if the sum of borough data equals citywide data. Furthermore, the dataset contains 30 detailed causes of car accidents in New York City from January to October 2021. We will combine some of them to create a more comprehensive picture of the root causes.
+
+The steps are as following.
+
+- Remove the metadata (first 3 rows and last 8 rows)
+- Filter the column `GeoCode` i.e. only contains citywide and borough-wide data.
+- Check if citywide data is matched with borough-wide data
+- Add a new column `ContributingFactorGroup` based on `ContributingFactorDescription`
+- Convert the new column to factor
+
+``` {r include = F}
+# load the dataset and remove the metadata
+cfct <- read.xlsx("./data/raw/cityacc-en-us (1).xlsx", rows = 4:1326, sheet = 3)
+
+# check if citywide data is matched with borough-wide data
+sum(cfct[cfct$GeoCode=='C',"Number_of_Vehicles"]) == sum(cfct[cfct$GeoCode %in% c('M','B','K','Q','S'),"Number_of_Vehicles"])
+
+# filter GeoCode
+# add a new column 'ContributingFactorGroup'
+cfct <- cfct %>% 
+  filter(GeoCode %in% c('C','M','B','K','Q','S')) %>%
+  mutate(ContributingFactorGroup = case_when(ContributingFactorDescription %in% c('CELL PHONE (HAND-HELD)',
+                                                                               'CELL PHONE (HANDS-FREE)',
+                                                                               'DRIVER INATTENTION/DISTRACTION',
+                                                                               'LISTENING/USING HEADPHONES',
+                                                                               'OTHER ELECTRONIC DEVICE',
+                                                                               'TEXTING') ~ 'Driver distraction',
+                                             ContributingFactorDescription %in% c('ALCOHOL INVOLVEMENT',
+                                                                               'DRUGS (ILLEGAL)',
+                                                                               'PRESCRIPTION MEDICATION'
+                                                                               ) ~ 'Intoxicate driving',
+                                             ContributingFactorDescription %in% c('PASSING TOO CLOSELY',
+                                                                               'FOLLOWING TOO CLOSELY') ~ 'Tailgating',
+                                             ContributingFactorDescription %in% c('FATIGUED/DROWSY',
+                                                                               'FELL ASLEEP') ~ 'Drowsy driving',
+                                             ContributingFactorDescription %in% c('ILLNESS',
+                                                                               'PHYSICAL DISABILITY',
+                                                                               'LOST CONSCIOUSNESS') ~ 'Illness/Disability',
+                                             ContributingFactorDescription %in% c('FAILURE TO KEEP RIGHT',
+                                                                               'FAILURE TO YIELD RIGHT-OF-WAY',
+                                                                               'TURNING IMPROPERLY',
+                                                                               'PASSING OR LANE USAGE IMPROPER',
+                                                                               'TRAFFIC CONTROL DISREGARDED',
+                                                                               'BACKING UNSAFELY',
+                                                                               'UNSAFE LANE CHANGING'
+                                                                               ) ~ 'Wrong-Way driving & Improper turns',
+                                             ContributingFactorDescription %in% c('OUTSIDE CAR DISTRACTION',
+                                                                               'PASSENGER DISTRACTION',
+                                                                               'ERR/CONFUSN PED/BIKE/OTHER PED',
+                                                                               'OTHER UNINVOLVED VEHICLE'
+                                                                               ) ~ 'Other',
+                                             ContributingFactorDescription %in% c('AGGRESSIVE DRIVING/ROAD RAGE'
+                                                                                  ) ~ 'Reckless driving',
+                                             ContributingFactorDescription %in% c('UNSAFE SPEED'
+                                                                                  ) ~ 'Speeding',
+                                             ContributingFactorDescription %in% c('DRIVER INEXPERIENCE'
+                                                                                  ) ~ 'Driver inexperience'
+                                             )) %>%
+  mutate(ContributingFactorGroup = as.factor(ContributingFactorGroup))
+  
+
+```
+
+
+After cleaning the data, we have 6 variables with 153 observations. 
+
+```{r}
+knitr::kable(data.frame(
+                column = c('GeoCode','GeocodeLabel','ContributingFactorCode','ContributingFactorDescription',
+                                'ContributingFactorGroup','Number_of_Vehicles'),
+                description = c("'C','M','B','K','Q','S'",'citywide or specific borough name','contributing factor id',
+                              'original contributing factor','new contributing factor',
+                              ' number of vehicles involved in injury and fatal collisions')
+              ), 
+             col.names = c('Column','Description'),
+             row.names = F,font_size = 10,
+             caption = 'Contributing Factor Dataset')
+```
+
+
+The relation map between the original contributing factors and new contributing factor is as follows:
+
+```{r}
+x = knitr::kable(data.frame(
+                new = c(rep('Driver distraction',6),
+                        rep('Intoxicate driving', 3),
+                        'Reckless driving',
+                        rep('Tailgating',2),
+                        rep('Wrong-Way driving & Improper turns',7),
+                        'Speeding',
+                        rep('Drowsy driving',2),
+                        rep('Illness/disability',3),
+                        'Driver inexperience',
+                        rep('Other',4)),
+                ori = c('cell phone (hand-held)',
+                        'cell phone (hands-free)',
+                        'driver inattention/distraction',
+                        'listening/using headphones',
+                        'other electronic device',
+                        'texting',
+                        
+                        'alcohol involvement',
+                        'drugs (illegal)',
+                        'prescription medication',
+                        
+                        'aggressive driving/road rage',
+                        
+                        'passing too closely',
+                        'following too closely',
+                        
+                        'failure to keep right',
+                        'failure to yield right-of-way',
+                        'turning improperly',
+                        'passing or lane usage improper',
+                        'traffic control disregarded',
+                        'backing unsafely',
+                        'unsafe lane changing',
+                        
+                        
+                        'unsafe speed',
+                        
+                        'fatigued/drowsy',
+                        'fell asleep',
+                        
+                        
+                        'illness',
+                        'physical disability',
+                        'lost consciousness',
+                        
+                        
+                        'driver inexperience',
+                        
+                        'outside car distraction',
+                        'passenger distraction',
+                        'other uninvolved vehicle',
+                        'err/confusn ped/bike/other ped'
+                        
+                        )
+              ), 
+             col.names = c('New','Original'),
+             row.names = F,font_size = 10,
+             caption = 'Map of new and orignal contributing factor')
+
+  collapse_rows(x, columns = 1, valign = "top")
+
+```
+
+
+
+
+```{r}
+write.csv(collisions, "./data/cleaned/collisions.csv")
+write.csv(precinct2, "./data/cleaned/precinct2.csv")
+write.csv(cfct, "./data/cleaned/cfct.csv")
+```
+

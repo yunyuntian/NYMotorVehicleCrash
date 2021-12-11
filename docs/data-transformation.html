@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Data transformation | YOUR TITLE HERE</title>
-  <meta name="description" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <title>Chapter 3 Data transformation | New York City Motor Vehicle Collision Data Analysis</title>
+  <meta name="description" content="Chapter 3 Data transformation | New York City Motor Vehicle Collision Data Analysis" />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
+  <meta property="og:title" content="Chapter 3 Data transformation | New York City Motor Vehicle Collision Data Analysis" />
   <meta property="og:type" content="book" />
   
   
@@ -16,15 +16,17 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Data transformation | YOUR TITLE HERE" />
+  <meta name="twitter:title" content="Chapter 3 Data transformation | New York City Motor Vehicle Collision Data Analysis" />
   
   
   
 
-<meta name="author" content="YOUR NAMES HERE" />
+<meta name="author" content="Yuren Dong, Xinyue Gui, Yisi Liu" />
 
 
-<meta name="date" content="2020-11-09" />
+
+<meta name="date" content="2021-12-11" />
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +35,9 @@
   
 <link rel="prev" href="data-sources.html"/>
 <link rel="next" href="missing-values.html"/>
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,8 +53,11 @@
 
 
 
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
-<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 
 
 
@@ -68,12 +74,16 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">SHORT TITLE HERE</a></li>
+<li><a href="./">NYC Vehicle Crash</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data-sources.html"><a href="data-sources.html"><i class="fa fa-check"></i><b>2</b> Data sources</a></li>
-<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a></li>
+<li class="chapter" data-level="3" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>3</b> Data transformation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-transformation.html"><a href="data-transformation.html#vehicle-collison-dataset"><i class="fa fa-check"></i><b>3.1</b> Vehicle Collison Dataset</a></li>
+<li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#contributing-factor-dataset"><i class="fa fa-check"></i><b>3.2</b> Contributing Factor Dataset</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
 <li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
@@ -89,7 +99,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">YOUR TITLE HERE</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">New York City Motor Vehicle Collision Data Analysis</a>
           </h1>
         </div>
 
@@ -99,7 +109,470 @@
             <section class="normal" id="section-">
 <div id="data-transformation" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Data transformation</h1>
+<p>We have three data sets in total, but we will only look at “GeoCollisions_1” and “GeoContributingFactors_3” for our analysis. In this section, we will go over the data pre-processing. If you are looking for more information on the original code, please see our <a href="https://github.com/yunyuntian/NYMotorVehicleCrash/blob/main/03-cleaning.Rmd">github repo chapter</a>.</p>
+<div id="vehicle-collison-dataset" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Vehicle Collison Dataset</h2>
+<p>We will explore two topics using the “GeoCollisions_1” dataset: 1. collision distribution 2. type of people involved in crashes. Because the second question can be answered directly from the raw dataset and does not require transformation, we only transform the dataset for the first. The following are the steps:</p>
+<ul>
+<li>Remove the metadata (first 3 rows and last 8 rows)</li>
+<li>Create two sub datasets: a. contains rows for borough wide data; b. contains rows for precinct wide data</li>
+<li>In precinct wide sub-data, add a column <code>borough</code> to identify which borough this precinct belongs to</li>
+<li>Add columns <code>not_severe_collisions</code> and <code>severe_pct</code> to identify the total number of not severe collisions and proportion of severe collisions for every precinct</li>
+<li>In borough wide sub-data, add <code>collision_type</code> and <code>value</code> to illustrate the number of collisions for each type of every borough</li>
+</ul>
+<p>After cleaning the data, we have 3 variables with 10 observations for borough wide data, and 7 variables with 77 observation for precinct wide data.</p>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-7">Table 3.1: </span>Vehicle Collision Dataset A (borough wide)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Column
+</th>
+<th style="text-align:left;">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:left;">
+borough name
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CollisionType
+</td>
+<td style="text-align:left;">
+severe/not severe
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Value
+</td>
+<td style="text-align:left;">
+number of accidents
+</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-8">Table 3.2: </span>Vehicle Collision Dataset B (precinct wide)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Column
+</th>
+<th style="text-align:left;">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Borough
+</td>
+<td style="text-align:left;">
+borough name
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GeoCode
+</td>
+<td style="text-align:left;">
+precinct code
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GeocodeLabel
+</td>
+<td style="text-align:left;">
+precinct name
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NumberofMotorVehicleCollisions
+</td>
+<td style="text-align:left;">
+number of car accidents
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+InjuryorFatalCollisions
+</td>
+<td style="text-align:left;">
+number of severe car accidents
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NotSevereCollisions
+</td>
+<td style="text-align:left;">
+number of not severe car accidents
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SeverePct
+</td>
+<td style="text-align:left;">
+number of severe/number of total car accidents
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="contributing-factor-dataset" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Contributing Factor Dataset</h2>
+<p>The “GeoContributingFactors_3” dataset presents data at three levels: citywide, borough wide, and precinct wide. We will perform our analysis based on the first two levels, so we will filter out the data from those levels and double-check if the sum of borough data equals citywide data. Furthermore, the dataset contains 30 detailed causes of car accidents in New York City from January to October 2021. We will combine some of them to create a more comprehensive picture of the root causes.</p>
+<p>The steps are as following.</p>
+<ul>
+<li>Remove the metadata (first 3 rows and last 8 rows)</li>
+<li>Filter the column <code>GeoCode</code> i.e. only contains citywide and borough-wide data.</li>
+<li>Check if citywide data is matched with borough-wide data</li>
+<li>Add a new column <code>ContributingFactorGroup</code> based on <code>ContributingFactorDescription</code></li>
+<li>Convert the new column to factor</li>
+</ul>
+<p>After cleaning the data, we have 6 variables with 153 observations.</p>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-10">Table 3.3: </span>Contributing Factor Dataset
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Column
+</th>
+<th style="text-align:left;">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+GeoCode
+</td>
+<td style="text-align:left;">
+‘C’,‘M’,‘B’,‘K’,‘Q’,‘S’
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GeocodeLabel
+</td>
+<td style="text-align:left;">
+citywide or specific borough name
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ContributingFactorCode
+</td>
+<td style="text-align:left;">
+contributing factor id
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ContributingFactorDescription
+</td>
+<td style="text-align:left;">
+original contributing factor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ContributingFactorGroup
+</td>
+<td style="text-align:left;">
+new contributing factor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number_of_Vehicles
+</td>
+<td style="text-align:left;">
+number of vehicles involved in injury and fatal collisions
+</td>
+</tr>
+</tbody>
+</table>
+<p>The relation map between the original contributing factors and new contributing factor is as follows:</p>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-11">Table 3.4: </span>Map of new and orignal contributing factor
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+New
+</th>
+<th style="text-align:left;">
+Original
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+cell phone (hand-held)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+cell phone (hands-free)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+driver inattention/distraction
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+listening/using headphones
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+other electronic device
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver distraction
+</td>
+<td style="text-align:left;">
+texting
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Intoxicate driving
+</td>
+<td style="text-align:left;">
+alcohol involvement
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Intoxicate driving
+</td>
+<td style="text-align:left;">
+drugs (illegal)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Intoxicate driving
+</td>
+<td style="text-align:left;">
+prescription medication
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Reckless driving
+</td>
+<td style="text-align:left;">
+aggressive driving/road rage
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tailgating
+</td>
+<td style="text-align:left;">
+passing too closely
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tailgating
+</td>
+<td style="text-align:left;">
+following too closely
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+failure to keep right
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+failure to yield right-of-way
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+turning improperly
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+passing or lane usage improper
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+traffic control disregarded
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+backing unsafely
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wrong-Way driving &amp; Improper turns
+</td>
+<td style="text-align:left;">
+unsafe lane changing
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Speeding
+</td>
+<td style="text-align:left;">
+unsafe speed
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drowsy driving
+</td>
+<td style="text-align:left;">
+fatigued/drowsy
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Drowsy driving
+</td>
+<td style="text-align:left;">
+fell asleep
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illness/disability
+</td>
+<td style="text-align:left;">
+illness
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illness/disability
+</td>
+<td style="text-align:left;">
+physical disability
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Illness/disability
+</td>
+<td style="text-align:left;">
+lost consciousness
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Driver inexperience
+</td>
+<td style="text-align:left;">
+driver inexperience
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:left;">
+outside car distraction
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:left;">
+passenger distraction
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:left;">
+other uninvolved vehicle
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:left;">
+err/confusn ped/bike/other ped
+</td>
+</tr>
+</tbody>
+</table>
 
+</div>
 </div>
             </section>
 
@@ -111,7 +584,6 @@
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -130,6 +602,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
@@ -138,7 +611,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/03-cleaning.Rmd",
+"link": "https://github.com/yunyuntian/NYMotorVehicleCrash.git/edit/main/03-cleaning.Rmd",
 "text": "Edit"
 },
 "history": {
@@ -146,10 +619,14 @@ gitbook.start({
 "text": null
 },
 "view": {
-"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/03-cleaning.Rmd",
+"link": "https://github.com/yunyuntian/NYMotorVehicleCrash.git/blob/main/03-cleaning.Rmd",
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
