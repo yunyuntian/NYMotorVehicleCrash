@@ -7,16 +7,12 @@ library(ggplot2)
 library(parcoords)
 library(GGally)
 library(parcoords)
-library(Lock5withR)
 library(plotly)
-
+library(highcharter)
 ```
+FIX order of Factors in graphs!!!
 
-
-
-As we discussed earlier, we found that ........
-
-We want to dig a little  deeper: How likely are pedestrians, motorists, cyclists, and passengers going to survive car accidents respectively? 
+Let's shift our focus a little bit and come to another motivating concern of this project: Are people at different positions during vehicle collisions equally injured? Does certain category of individual have a higher death rate during collisions?
 
 
 ```{r}
@@ -33,61 +29,83 @@ street <- df %>% filter(! GeoCode %in% c('M','B','K','Q','S','C'))
 
 injured <- city%>%select(c(1,2,3,5,7,9))
 killed <- city%>%select(c(1,2,4,6,8,10))
-colnames(injured) <- c("GeoCode","GeoCodeLabel","Motor","Passenger","cyclist","Pedestr" )
-colnames(killed) <- c("GeoCode","GeoCodeLabel","Motor","Passenger","cyclist","Pedestr" )
+colnames(injured) <- c("GeoCode","GeoCodeLabel","Driver","Passenger","Cyclist","Pedestrian" )
+colnames(killed) <- c("GeoCode","GeoCodeLabel","Driver","Passenger","Cyclist","Pedestrian" )
 injured$condition <- 'injured'
 killed$condition <- 'killed'
 total <- rbind(injured,killed)
 ```
 
-Let's first take a look at number of individuals involved in motor vehicle accidents in our dataset.
+
+First we want to take a look at the patterns of number of individuals involved in motor vehicle accidents in our dataset. As mentioned in earlier sections, our data spreads across 5 boroughs in New York: Bronx, Brooklyn, Manhattan, Queens, and Staten Island.
 
 ```{r}
-typeCounts <- aggregate(. ~GeoCodeLabel, data=select(total,c(2,3,4,5,6)), FUN=sum)
+typeCounts <- aggregate(. ~GeoCodeLabel, data=select(total,c(2,3,6,4,5)), FUN=sum)
+typeCounts$GeoCodeLabel <- c("Bronx", "Brooklyn", "Manhattan", "Queens","Staten Island")
+typeCounts %>%
+  pivot_longer(names_to = "Type",values_to = "number",-c(GeoCodeLabel)) %>%
+  
+  ggplot(aes(fill=Type , y=number, x=fct_reorder(GeoCodeLabel,number,.desc = TRUE))) + 
+  geom_bar(position="stack", stat="identity")+
+  xlab("Borough")+
+  ylab("")+
+  ggtitle("Number of Different Types of Individuals involved in Collisions in New York")
+  
+```
+
+
+```{r}
+
+hc <- typeCounts %>%
+  pivot_longer(names_to = "Type",values_to = "number",-c(GeoCodeLabel)) %>%
+  hchart(
+    'column', hcaes(x = 'GeoCodeLabel', y = 'number', group = 'Type'),
+    stacking = "normal"
+    )
+
+# typeCounts %>%
+#   pivot_longer(names_to = "Type",values_to = "number",-c(GeoCodeLabel)) %>%
+#   
+#   ggplot(aes(fill=Type , y=number, x=fct_reorder(GeoCodeLabel,number,.desc = TRUE))) + 
+#   geom_bar(position="stack", stat="identity")+
+#   xlab("Borough")+
+#   ylab("")+
+#   ggtitle("Number of Different Types of Individuals involved in Collisions in New York")
+hc
+```
+We can see from the grpah that Brooklyn and Queens has the most total counts of individuals involved in collisions, which matches our discovery in previous sections that: ???
+
+A general pattern across the boroughs is that Drivers seem to have a highest proportion of presence in collisions,followed by passengers, which is quite self-explanatory, as car collisions should always involve drivers and sometimes there are passengers in cars. We can see that the boroughs could be split into 3 sets based on total counts of individuals involved in collisions: Brooklyn and queens, Bronx and Manhattan, and Staten Island by itself. There exist gaps of counts between the groups, we believe this is due to the total amount of traffic, population, and other factors. This also matches with our discovery earlier:???
+
+Now we notice that there seems to be a general pattern across boroughs. To better visualize the pattern, we decided to plot them in proportions.
+
+```{r}
 typeCounts %>%
   pivot_longer(names_to = "type",values_to = "number",-c(GeoCodeLabel)) %>%
-  ggplot(aes(fill=type , y=number, x=GeoCodeLabel)) + 
-    geom_bar(position="dodge", stat="identity")
+  
+  ggplot(aes(fill=type , y=number, x=fct_reorder(GeoCodeLabel,number,.desc = TRUE))) + 
+  geom_col(position = "fill")+
+  xlab("Borough")+
+  ylab("Proportion")+
+  ggtitle("Different Types of Individuals involved in Collisions in New York Boroughs")
 
 ```
 
-type 排序
+From this stacked bar chart of proportions, we find that the distribution of different types of transportation almost remains the same across different boroughs at New York, that driver takes about 40% of individual counts, passenger takes about 30%, Pedestrians take about 20%, and Cyclist would take the rest 10%. However, there are some abnormal cases which we would neglect in this section and talk more about in the Conclusion.
 
-General trend also matches the discovery earlier
+As discovered above that a general pattern is followed across different boroughs in New York, we would reluctantly merge the injured/killed counts and look deeply into the injuries and kills of different types of individuals. Which type will most likely get killed?
 
-
-mosaic plot
-
-
-We can see that the distribution of different types of transportation remains the same across different boroughs at New York. To verify this point, we could perform a multivariate chi 2-test? t test?
-
-
-
-
-Space for chi 2-test/ t test
-
-
-
-
-
-As we can see from above, there is no geographical differences over types of individuals getting injured or killed in motor vehicle accidents in New York.
-
-Thus, we could be confident to merge the injured/killed counts across different boroughs.
-
-
-Back to the main focus of the topic, which type of individual will most likely get killed
 ```{r}
-
 conditionDF <- aggregate(. ~condition, data=select(total,c(7,3,4,5,6)), FUN=sum)
 
 conditionDF %>%
   pivot_longer(names_to = "type",values_to = "number",-c(condition)) %>%
   ggplot(aes(fill=condition , y=number, x=type)) + 
-    geom_bar(position="dodge", stat="identity")+
+    geom_bar(position="stack", stat="identity")+
     scale_y_continuous(trans='log10')
-  换成stacked bar chart  
-
 ```
+Due to the fact that 
+
 We can see that there's a difference in scale between injured and killed.
 
 We decide to come up with a new term: survive
@@ -97,7 +115,7 @@ We decide to come up with a new term: survive
 survive <- select(conditionDF,c(2,3,4,5))[1,] / (select(conditionDF,c(2,3,4,5))[1,] + select(conditionDF,c(2,3,4,5))[2,])
 survive
 ```
-
+忘了还要画什么图来着
 We can see that pedestrians have the lowest survive rate while injured in a motor vehicle accident: 0.9847, while the other 3 types all have a survive rate of larger than 0.99. There're multiple reasons and guesses
 
 most population
@@ -109,4 +127,4 @@ least protection: passenger > motor (as sometimes only motor invovled) > cyclist
 Expected value 
 Number_of_Motor_Vehicle_Collisions
 
-
+For example, Cyclist have a much higher proportion in Manhattan, which might because that citybike and food delivery service is more popular in Manhattan, which leads to an increase of total incidents, raising the proportion of 

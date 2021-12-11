@@ -24,7 +24,7 @@
 <meta name="author" content="Yuren Dong, Xinyue Gui, Yisi Liu" />
 
 
-<meta name="date" content="2021-11-18" />
+<meta name="date" content="2021-12-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -101,6 +101,27 @@
             <section class="normal" id="section-">
 <div id="results" class="section level1" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Results</h1>
+<p>Let’s shift our focus a little bit and come to another motivating concern of this project: Are people at different positions during vehicle collisions equally injured? Does certain category of individual have a higher death rate during collisions?</p>
+<p>First we want to take a look at the patterns of number of individuals involved in motor vehicle accidents in our dataset. As mentioned in earlier sections, our data spreads across 5 boroughs in New York: Bronx, Brooklyn, Manhattan, Queens, and Staten Island.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can see from the grpah that Brooklyn and Queens has the most total counts of individuals involved in collisions, which matches our discovery in previous sections that: ???</p>
+<p>A general pattern across the boroughs is that Drivers seem to have a highest proportion of presence in collisions,followed by passengers, which is quite self-explanatory, as car collisions should always involve drivers and sometimes there are passengers in cars. We can see that the boroughs could be split into 3 sets based on total counts of individuals involved in collisions: Brooklyn and queens, Bronx and Manhattan, and Staten Island by itself. There exist gaps of counts between the groups, we believe this is due to the total amount of traffic, population, and other factors. This also matches with our discovery earlier:???</p>
+<p>Now we notice that there seems to be a general pattern across boroughs. To better visualize the pattern, we decided to plot them in proportions.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We can see that the distribution of different types of transportation remains the same across different boroughs at New York.</p>
+<p>As we can see from above, there is no geographical differences over types of individuals getting injured or killed in motor vehicle accidents in New York.</p>
+<p>Thus, we could be confident to merge the injured/killed counts across different boroughs.</p>
+<p>Back to the main focus of the topic, which type of individual will most likely get killed
+<img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+We can see that there’s a difference in scale between injured and killed.</p>
+<p>We decide to come up with a new term: survive</p>
+<pre><code>##      Driver Passenger   Cyclist Pedestrian
+## 1 0.9962103 0.9967213 0.9942197  0.9846939</code></pre>
+<p>We can see that pedestrians have the lowest survive rate while injured in a motor vehicle accident: 0.9847, while the other 3 types all have a survive rate of larger than 0.99. There’re multiple reasons and guesses</p>
+<p>most population</p>
+<p>least protection: passenger &gt; motor (as sometimes only motor invovled) &gt; cyclist &gt; ped</p>
+<p>Expected value
+Number_of_Motor_Vehicle_Collisions</p>
 
 </div>
             </section>
