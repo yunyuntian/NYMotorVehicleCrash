@@ -1,1 +1,112 @@
 # Results
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+library(parcoords)
+library(GGally)
+library(parcoords)
+library(Lock5withR)
+library(plotly)
+
+```
+
+
+
+As we discussed earlier, we found that ........
+
+We want to dig a little  deeper: How likely are pedestrians, motorists, cyclists, and passengers going to survive car accidents respectively? 
+
+
+```{r}
+df <- read_excel("./data/cityacc-en-us.xlsx", sheet = "GeoCollisions_1",skip = 3,n_max = 83)
+
+city <- df %>% filter(GeoCode %in% c('M','B','K','Q','S'))
+city <- city %>% select(c(1,2,6:13))
+
+street <- df %>% filter(! GeoCode %in% c('M','B','K','Q','S','C'))
+
+```
+
+```{r}
+
+injured <- city%>%select(c(1,2,3,5,7,9))
+killed <- city%>%select(c(1,2,4,6,8,10))
+colnames(injured) <- c("GeoCode","GeoCodeLabel","Motor","Passenger","cyclist","Pedestr" )
+colnames(killed) <- c("GeoCode","GeoCodeLabel","Motor","Passenger","cyclist","Pedestr" )
+injured$condition <- 'injured'
+killed$condition <- 'killed'
+total <- rbind(injured,killed)
+```
+
+Let's first take a look at number of individuals involved in motor vehicle accidents in our dataset.
+
+```{r}
+typeCounts <- aggregate(. ~GeoCodeLabel, data=select(total,c(2,3,4,5,6)), FUN=sum)
+typeCounts %>%
+  pivot_longer(names_to = "type",values_to = "number",-c(GeoCodeLabel)) %>%
+  ggplot(aes(fill=type , y=number, x=GeoCodeLabel)) + 
+    geom_bar(position="dodge", stat="identity")
+
+```
+
+type 排序
+
+General trend also matches the discovery earlier
+
+
+mosaic plot
+
+
+We can see that the distribution of different types of transportation remains the same across different boroughs at New York. To verify this point, we could perform a multivariate chi 2-test? t test?
+
+
+
+
+Space for chi 2-test/ t test
+
+
+
+
+
+As we can see from above, there is no geographical differences over types of individuals getting injured or killed in motor vehicle accidents in New York.
+
+Thus, we could be confident to merge the injured/killed counts across different boroughs.
+
+
+Back to the main focus of the topic, which type of individual will most likely get killed
+```{r}
+
+conditionDF <- aggregate(. ~condition, data=select(total,c(7,3,4,5,6)), FUN=sum)
+
+conditionDF %>%
+  pivot_longer(names_to = "type",values_to = "number",-c(condition)) %>%
+  ggplot(aes(fill=condition , y=number, x=type)) + 
+    geom_bar(position="dodge", stat="identity")+
+    scale_y_continuous(trans='log10')
+  换成stacked bar chart  
+
+```
+We can see that there's a difference in scale between injured and killed.
+
+We decide to come up with a new term: survive
+
+
+```{r}
+survive <- select(conditionDF,c(2,3,4,5))[1,] / (select(conditionDF,c(2,3,4,5))[1,] + select(conditionDF,c(2,3,4,5))[2,])
+survive
+```
+
+We can see that pedestrians have the lowest survive rate while injured in a motor vehicle accident: 0.9847, while the other 3 types all have a survive rate of larger than 0.99. There're multiple reasons and guesses
+
+most population
+
+least protection: passenger > motor (as sometimes only motor invovled) > cyclist > ped
+
+
+
+Expected value 
+Number_of_Motor_Vehicle_Collisions
+
+
