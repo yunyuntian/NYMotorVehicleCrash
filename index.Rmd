@@ -1,5 +1,6 @@
 --- 
-title: "New York City Motor Vehicle Collision Data Analysis"
+
+title: "2021 New York City Motor Vehicle Collision Data Analysis"
 author: "Yuren Dong, Xinyue Gui, Yisi Liu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -7,3 +8,21 @@ site: bookdown::bookdown_site
 
 # Introduction
 
+New York City (NYC), as one of the top global destination for visitors, many tourists are attracted by its vitality and diversity -- especially its museums, entertainment, and restaurants. The City is also host to conventions and trade shows, and major athletic events such as the New York City Marathon and the U.S. Open. According to the Office of New York State Comptroller, in 2019, the number of tourists visiting New York City had almost tripled in the 28 years since 1991, with almost half the growth occurring in the past 10 years. With huge growth in tourism industry, the streets at NYC is get increasingly crowed, which potentially raises the safety issue -- vehicle collision. As I first visited NYC, I was surprised by pedestrians who go across the street without looking at the traffic lights. “Is it safe to walk like this?” this was the first impression that come out of mind. To further investigate the status quo of vehicle collision at NYC, we conduct in-depth analysis of geological differences and causation of different types of car crash. Our objective is to draw insights, which may provide suggestions for tourists and local residents at NYC while driving a car or crossing the streets.
+
+
+We found our data on New York Police Department (NYPD) Motor Vehicle Collisions webpage:  https://www1.nyc.gov/site/nypd/stats/traffic-data/traffic-data-collision.page.The datasets is updated on a monthly basis and spans from January up to the previous month from now. For consistency, we will use the cumulative data on Octobor 2021. It consists of three parts: collision details (number of vehicles damaged, number of individuals injured or killed), vehicle type descriptions, and contributing factors. We would like to carry out analysis from both geographic and time series perspectives and answer the following questions:
+
+- Where do car accidents usually occur in New York? Where do those severe accidents occur?
+- What causes vehicle crashes? Are there any geographic differences over the contributing factors? 
+- How likely are pedestrians, motorists, cyclists, and passengers going to survive car accidents respectively?
+
+
+In the following chapters, we will discuss these questions and provide some new insights on the vehicle collisions at NYC.
+
+For more details of this project, please refer to this link
+https://github.com/yunyuntian/NYMotorVehicleCrash.git to check out our Github repository and navigate code in .Rmd files.
+
+
+References:
+https://www.osc.state.ny.us/reports/osdc/tourism-industry-new-york-city

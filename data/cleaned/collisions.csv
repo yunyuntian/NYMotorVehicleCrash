@@ -1,0 +1,11 @@
+"","name","collision_type","value"
+"1","MANHATTAN","Severe",657
+"2","MANHATTAN","Not Severe",1063
+"3","BRONX","Severe",650
+"4","BRONX","Not Severe",1111
+"5","BROOKLYN","Severe",1228
+"6","BROOKLYN","Not Severe",1943
+"7","QUEENS","Severe",1059
+"8","QUEENS","Not Severe",1778
+"9","STATEN ISLAND","Severe",156
+"10","STATEN ISLAND","Not Severe",341
