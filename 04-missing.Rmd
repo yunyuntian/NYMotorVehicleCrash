@@ -1,2 +1,147 @@
 # Missing values
-There is no missing values in our dataset.
+
+
+There is no missing value in our 3 main datasets.
+
+```{r}
+library(tidyverse)
+library(patchwork)
+
+collisions = read.csv('./data/cleaned/collisions.csv')
+precinct2 = read.csv('./data/cleaned/precinct2.csv')
+cfct = read.csv('./data/cleaned/cfct.csv')
+  
+names(collisions) <- abbreviate(names(collisions), minlength=2)
+names(precinct2) <- abbreviate(names(precinct2), minlength=2)
+names(cfct) <- abbreviate(names(cfct), minlength=2)
+
+missing_visual <- function(df, percent){
+
+  missing_patterns <- data.frame(is.na(df)) %>%
+    group_by_all() %>%
+    count(name = "count", sort = TRUE) %>%
+    ungroup()
+  
+  missing1 <- missing_patterns%>%
+    arrange(desc(count)) %>% 
+    rownames_to_column('id') %>%
+    mutate(prop = prop.table(count), id = fct_rev(as.factor(as.numeric(id))))
+  
+  missing2 <- data.frame(is.na(df)) %>%
+    summarise_all(sum) %>%
+    pivot_longer(everything(), names_to = 'variable', values_to = 'count')%>%
+    mutate(variable = fct_reorder(variable, count), prop = prop.table(count))
+  
+  alpha <- rep(0.6, nrow(missing_patterns))
+
+  #the row number of complete cases
+  complete_position <- which(rowSums(missing_patterns%>%select(-count))==0)
+  
+  layout <- c(area(1,1,1,2),
+              area(2,1,3,2),
+              area(2,3,3,3))
+  
+  p1 <- missing2 %>%
+    ggplot(aes(x=variable, y = count))+
+    geom_histogram(fill = 'lightblue', stat = 'identity', alpha = 0.6)+
+    scale_x_discrete(limits=rev)+
+    ylab('number rows \n missing')+
+    theme_bw()+
+    theme(axis.title.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
+    
+  p2 <- missing1%>%
+    gather(variable,value,-c(id,count,prop)) %>% 
+    mutate(variable = factor(variable, levels = levels(missing2$variable)))%>%
+    ggplot(aes(x = fct_rev(variable), y = id, fill = value, alpha = id)) +
+    geom_tile(color = 'white') + 
+    scale_fill_manual(values = c('grey', 'purple')) +
+    ylab('missing id') + 
+    xlab('variable') +
+    scale_alpha_manual(values = replace(alpha, nrow(missing_patterns) - complete_position + 1, 1)) +
+    theme_bw()+
+    theme(legend.position = "none",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank())+
+    annotate('text', label = 'complete case', 
+             x = ceiling(ncol(df)/2), 
+             y = nrow(missing_patterns) - complete_position + 1) 
+  
+  p3 <- missing1%>%
+    ggplot(aes(id, count, alpha = id))+
+    geom_histogram(fill = 'lightblue', stat = 'identity')+
+    scale_alpha_manual(values = replace(alpha, nrow(missing_patterns) - complete_position + 1, 1)) +
+    ylab('row count')+
+    theme_bw()+
+    theme(axis.title.y = element_blank(), 
+          legend.position = "none",
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank())+
+    coord_flip()
+  
+  p4 <- missing2 %>%
+    ggplot(aes(x=variable, y = prop))+
+    geom_histogram(fill = 'lightblue', stat = 'identity', alpha = 0.6)+
+    scale_x_discrete(limits=rev)+
+    ylab('% rows \n missing')+
+    theme_bw()+
+    theme(axis.title.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.x = element_blank())
+    
+  p5 <- missing1 %>%
+    ggplot(aes(id, prop, alpha = id))+
+    geom_histogram(fill = 'lightblue', stat = 'identity')+
+    ylab('%row')+
+    scale_alpha_manual(values = replace(alpha, nrow(missing_patterns) - complete_position + 1, 1)) +
+    theme_bw()+
+    theme(axis.title.y = element_blank(), 
+          legend.position = "none",
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank())+
+    coord_flip()
+  
+if(percent == FALSE) {
+  return(p1 + p2 + p3 + 
+           plot_annotation(title = 'Missing Value Pattern (count)')+
+           plot_layout(design = layout)) 
+  }
+
+else if(percent == TRUE) {
+  return(p4 + p2 + p5 +
+           plot_annotation(title = 'Missing Value Pattern (percent)')+
+           plot_layout(design = layout))
+ }
+}
+
+
+
+```
+
+- For **Collisions** data:
+
+```{r}
+
+missing_visual(collisions, percent = TRUE)
+
+```
+
+- For **Precinct2** data:
+
+```{r}
+
+missing_visual(precinct2, percent = TRUE)
+
+```
+
+- For **cfct** data:
+
+
+```{r}
+
+missing_visual(cfct, percent = TRUE)
+```
+
