@@ -65,7 +65,6 @@ precinct2['severe_pct'] <- round((precinct2['Injury_or_Fatal_Collisions'] / prec
 After cleaning the data, we have 3 variables with 10 observations for borough wide data, and 7 variables with 77 observation for precinct wide data.
 
 ```{r }
-## 没改
 # a.borough wide
 knitr::kable(data.frame(
                 column = c('Name','CollisionType','Value'),
@@ -122,7 +121,7 @@ cfct <- cfct %>%
                                                                                'DRIVER INATTENTION/DISTRACTION',
                                                                                'LISTENING/USING HEADPHONES',
                                                                                'OTHER ELECTRONIC DEVICE',
-                                                                               'TEXTING') ~ 'Driver distraction',
+                                                                               'TEXTING') ~ 'Distracted driving',
                                              ContributingFactorDescription %in% c('ALCOHOL INVOLVEMENT',
                                                                                'DRUGS (ILLEGAL)',
                                                                                'PRESCRIPTION MEDICATION'
