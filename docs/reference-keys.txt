@@ -11,3 +11,13 @@ tab:unnamed-chunk-10
 tab:unnamed-chunk-11
 vehicle-collison-dataset
 contributing-factor-dataset
+where-do-car-accidents-usually-occur-in-nyc-where-do-those-severe-accidents-occur
+nyc-car-collisions-by-borough
+nyc-car-collisions-by-precinct
+what-causes-severe-vehicle-crashes
+overview
+is-there-any-geographical-variation-in-the-contributing-factors
+main-factor-in-leading-causes
+are-people-at-different-positions-during-vehicle-collisions-equally-injured
+overall-patterns
+survive-rate-analysis
