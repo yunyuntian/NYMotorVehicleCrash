@@ -1,4 +1,29 @@
 # Interactive component
 
+## Link to the map
+Click [here](https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&file=index.html) or copy the url:
 
-<iframe width="1000" height="521" src="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?mode=embed" title="6. Interactive Components" frameborder="0" ></iframe>
+https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&file=index.html
+
+If you are looking for more information on the original code, please see our [github repo] (https://github.com/yunyuntian/NYMotorVehicleCrash/Interactive).
+
+
+## Description and Instruction
+This interactive map provides the car collision analysis by borough in New York City. It covers the first two topics we discussed in the previous chapter. For example, where do most car accidents happen in New York City? Where do these terrible incidents happen? What factors contribute to car collisions? Is there any geographical variation in the contributing factors? Using the interactive map, you will be able to find answers to these questions.
+
+The plot is initialized with a map of New York City with no default borough selected. 
+
+1. Each borough is color-coded by the total number of car collisions from January to October, as scaled on the legend. 
+2. Users can hover the mouse over a borough to see the name, severe collision rate, average number of people injured or killed in an accident, number of cases per day, number of severe cases per day, and primary cause of accidents of each borough.
+
+Notes: 
+
+- Because the data only covers the months of January to October in 2021 before being analyzed, the total number of car accidents in a real-world scenario is subject to change. To put it another way, the color scale may change if data from November and December are provided.
+
+
+References:
+
+1. Originally based on the [Map of Thailand](https://gist.github.com/kristw/7fbf031e3205a8a453a8) by Krist Wongsuphasawat using GeoJSON and D3.js
+
+2. Forked from [ix4's block](https://bl.ocks.org/ix4/6f44e559b29a72c4c5d130ac13aad317), a GeoJson Map of NYC Boroughs
+

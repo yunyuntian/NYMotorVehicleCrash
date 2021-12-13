@@ -277,7 +277,7 @@ Regarding wrong-way driving, **failure to yield the right-of-way** accounts for 
 At this point, we can answer our second question:
 
 - **Distracted driving** and **wrong-way driving & Improper turns** are the two leading causes of accidents in NYC.
-- The distribution of causes varies by location. In particular, **wrong-way driving** is the leading cause in **Queens**, while **distracted driving** is the leading cause in the other four.
+- The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**. 
 
 
 

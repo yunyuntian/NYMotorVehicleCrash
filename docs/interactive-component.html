@@ -98,7 +98,11 @@
 <li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#survive-rate-analysis"><i class="fa fa-check"></i><b>5.3.2</b> Survive rate Analysis</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
+<li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="interactive-component.html"><a href="interactive-component.html#link-to-the-map"><i class="fa fa-check"></i><b>6.1</b> Link to the map</a></li>
+<li class="chapter" data-level="6.2" data-path="interactive-component.html"><a href="interactive-component.html#description-and-instruction"><i class="fa fa-check"></i><b>6.2</b> Description and Instruction</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -121,9 +125,30 @@
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Interactive component</h1>
-<iframe width="1000" height="521" src="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?mode=embed" title="6. Interactive Components" frameborder="0">
-</iframe>
+<div id="link-to-the-map" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Link to the map</h2>
+<p>Click <a href="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&amp;file=index.html">here</a> or copy the url: <a href="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&amp;file=index.html" class="uri">https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&amp;file=index.html</a>
+If you are looking for more information on the original code, please see our [github repo] (<a href="https://github.com/yunyuntian/NYMotorVehicleCrash/Interactive" class="uri">https://github.com/yunyuntian/NYMotorVehicleCrash/Interactive</a>).</p>
+</div>
+<div id="description-and-instruction" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Description and Instruction</h2>
+<p>This interactive map provides the car collision analysis by borough in New York City. It covers the first two topics we discussed in the previous chapter. For example, where do most car accidents happen in New York City? Where do these terrible incidents happen? What factors contribute to car collisions? Is there any geographical variation in the contributing factors? Using the interactive map, you will be able to find answers to these questions.</p>
+<p>The plot is initialized with a map of New York City with no default borough selected.</p>
+<ol style="list-style-type: decimal">
+<li>Each borough is color-coded by the total number of car collisions from January to October, as scaled on the legend.</li>
+<li>Users can hover the mouse over a borough to see the name, severe collision rate, average number of people injured or killed in an accident, number of cases per day, number of severe cases per day, and primary cause of accidents of each borough.</li>
+</ol>
+<p>Notes:</p>
+<ul>
+<li>Because the data only covers the months of January to October in 2021 before being analyzed, the total number of car accidents in a real-world scenario is subject to change. To put it another way, the color scale may change if data from November and December are provided.</li>
+</ul>
+<p>References:</p>
+<ol style="list-style-type: decimal">
+<li><p>Originally based on the <a href="https://gist.github.com/kristw/7fbf031e3205a8a453a8">Map of Thailand</a> by Krist Wongsuphasawat using GeoJSON and D3.js</p></li>
+<li><p>Forked from <a href="https://bl.ocks.org/ix4/6f44e559b29a72c4c5d130ac13aad317">ix4’s block</a>, a GeoJson Map of NYC Boroughs</p></li>
+</ol>
 
+</div>
 </div>
             </section>
 

@@ -21,3 +21,5 @@ main-factor-in-leading-causes
 are-people-at-different-positions-during-vehicle-collisions-equally-injured
 overall-patterns
 survive-rate-analysis
+link-to-the-map
+description-and-instruction
