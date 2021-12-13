@@ -1,11 +1,11 @@
 # Interactive component
 
 ## Link to the map
-Click [here](https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&file=index.html) or copy the url:
+Click [here](https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d) or copy the url:
 
-https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?edit=files&file=index.html
+https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d
 
-If you are looking for more information on the original code, please see our [github repo] (https://github.com/yunyuntian/NYMotorVehicleCrash/Interactive).
+If you are looking for more information on the original code, please see our [github repo](https://github.com/yunyuntian/NYMotorVehicleCrash/).
 
 
 ## Description and Instruction
