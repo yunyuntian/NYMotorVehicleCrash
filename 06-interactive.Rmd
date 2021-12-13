@@ -1,3 +1,4 @@
 # Interactive component
 
 
+<iframe width="1000" height="521" src="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?mode=embed" title="6. Interactive Components" frameborder="0" ></iframe>

@@ -133,7 +133,7 @@ The above graph presents the top 20 precincts with the highest severe accidents 
 At this point, we can answer our first question:
 
 - **Brooklyn** and **Queens** involved with more car accidents.
-- Among those car accidents, precincts in **Brooklyn** and **Manhattan** have more severe collisions.
+- The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**.
 
 
 
@@ -223,7 +223,7 @@ ggplotly(p)
 
 ```
 
-The mosaic plot above displays boxes of each cause at varying heights distributed across five boroughs. More specifically, the proportion of **distracted driving** incidents in **Brooklyn**, **Manhattan**, and **Staten Island** is significantly higher than in Queens and the Bronx. **The Bronx** has the highest percentage of **Speeding** cases. Furthermore, by hovering above the graph, we surprisingly found that **wrong-way driving** is the leading cause in **Queens**, while **distracted driving** is the leading cause in the other four.
+The mosaic plot above displays boxes of each cause at varying heights distributed across five boroughs. More specifically, the proportion of **distracted driving** incidents in **Brooklyn**, **Manhattan**, and **Staten Island** is significantly higher than in Queens and the Bronx. **The Bronx** has the highest percentage of **Speeding** cases. 
 
 Therefore, we conclude from these findings that the distribution of causes varies by location.
 
@@ -317,6 +317,9 @@ typeCounts <- aggregate(. ~GeoCodeLabel, data=select(total,c(2,3,6,4,5)), FUN=su
 typeCounts$GeoCodeLabel <- c( "Brooklyn","Queens", "Bronx","Manhattan", "Staten Island") 
 typeCounts <- typeCounts%>%
   pivot_longer(names_to = "Type",values_to = "number",-c(GeoCodeLabel))
+
+typeCounts$Type <- as.factor(typeCounts$Type)
+typeCounts$Type <- fct_reorder(typeCounts$Type, typeCounts$number, max)
 ```
 
 
@@ -386,7 +389,7 @@ conditionDF%>%
 
 ```
 
-In this plot we showed the counts of injured individuals and killed individuals in different categories during car collision. Due to the small number of counts of killed individuals, we plot the y-axis on a log scale to better visualize the pattern. However, the patterns are still not clear enough to provide any useful information. We decide to come up with a new term: survive rate = Injured / (Injured + killed), representing the proportion of people survived when they get injured/killed in a car accident.
+In this plot we showed the counts of injured individuals and killed individuals in different categories during car collision. Note that due to the small number of counts of killed individuals, we plot the y-axis on a log scale and position killed data at the bottom of stacked bars to better visualize the pattern. However, the patterns are still not clear enough to provide any useful information. We decide to come up with a new term: survive rate = Injured / (Injured + killed), representing the proportion of people survived when they get injured/killed in a car accident.
 
 
 ```{r}

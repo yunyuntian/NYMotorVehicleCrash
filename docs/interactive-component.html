@@ -79,7 +79,25 @@
 <li class="chapter" data-level="3.2" data-path="data-transformation.html"><a href="data-transformation.html#contributing-factor-dataset"><i class="fa fa-check"></i><b>3.2</b> Contributing Factor Dataset</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="missing-values.html"><a href="missing-values.html"><i class="fa fa-check"></i><b>4</b> Missing values</a></li>
-<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a></li>
+<li class="chapter" data-level="5" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>5</b> Results</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="results.html"><a href="results.html#where-do-car-accidents-usually-occur-in-nyc-where-do-those-severe-accidents-occur"><i class="fa fa-check"></i><b>5.1</b> Where do car accidents usually occur in NYC? Where do those severe accidents occur?</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="results.html"><a href="results.html#nyc-car-collisions-by-borough"><i class="fa fa-check"></i><b>5.1.1</b> 2021 NYC Car Collisions by Borough</a></li>
+<li class="chapter" data-level="5.1.2" data-path="results.html"><a href="results.html#nyc-car-collisions-by-precinct"><i class="fa fa-check"></i><b>5.1.2</b> 2021 NYC Car Collisions by Precinct</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="results.html"><a href="results.html#what-causes-severe-vehicle-crashes"><i class="fa fa-check"></i><b>5.2</b> What causes severe vehicle crashes?</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="results.html"><a href="results.html#overview"><i class="fa fa-check"></i><b>5.2.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2.2" data-path="results.html"><a href="results.html#is-there-any-geographical-variation-in-the-contributing-factors"><i class="fa fa-check"></i><b>5.2.2</b> Is there any geographical variation in the contributing factors?</a></li>
+<li class="chapter" data-level="5.2.3" data-path="results.html"><a href="results.html#main-factor-in-leading-causes"><i class="fa fa-check"></i><b>5.2.3</b> Main factor in leading causes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="results.html"><a href="results.html#are-people-at-different-positions-during-vehicle-collisions-equally-injured"><i class="fa fa-check"></i><b>5.3</b> Are people at different positions during vehicle collisions equally injured?</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="results.html"><a href="results.html#overall-patterns"><i class="fa fa-check"></i><b>5.3.1</b> Overall Patterns</a></li>
+<li class="chapter" data-level="5.3.2" data-path="results.html"><a href="results.html#survive-rate-analysis"><i class="fa fa-check"></i><b>5.3.2</b> Survive rate Analysis</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="6" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>6</b> Interactive component</a></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -103,296 +121,8 @@
             <section class="normal" id="section-">
 <div id="interactive-component" class="section level1" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Interactive component</h1>
-&lt;!DOCTYPE html&gt;
-<meta charset="utf-8">
-<style>
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Josefin+Slab|Arvo|Lato|Vollkorn|Abril+Fatface|Old+Standard+TT|Droid+Sans|Lobster|Inconsolata|Montserrat|Playfair+Display|Karla|Alegreya|Libre+Baskerville|Merriweather|Lora|Archivo+Narrow|Neuton|Signika|Questrial|Fjalla+One|Bitter|Varela+Round);
-
-.background {
-  fill: #eee;
-  pointer-events: all;
-}
-
-.map-layer {
-  fill: #fff;
-  stroke: #aaa;
-}
-
-.effect-layer{
-  pointer-events:none;
-}
-
-text{
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
-}
-
-text.big-text{
-  font-size: 30px;
-  font-weight: 400;
-}
-
-.effect-layer text, text.dummy-text{
-  font-size: 12px;
-}
-
-</style>
-<body>
-<svg>
-</svg>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script>
-
-var width = 960,
-    height = 500,
-    centered;
-
-// Define color scale
-var color = d3.scale.linear()
-  .domain([1, 20])
-  .clamp(true)
-  .range(['#fff', '#409A99']);
-
-var projection = d3.geo.mercator()
-  .scale(45000)
-  // Center the Map in Colombia
-  .center([-73.935242, 40.730610])
-  .translate([width / 2, height / 2]);
-
-var path = d3.geo.path()
-  .projection(projection);
-
-// Set svg width & height
-var svg = d3.select('svg')
-  .attr('width', width)
-  .attr('height', height);
-
-// Add background
-svg.append('rect')
-  .attr('class', 'background')
-  .attr('width', width)
-  .attr('height', height)
-  .on('click', clicked);
-
-var g = svg.append('g');
-
-var effectLayer = g.append('g')
-  .classed('effect-layer', true);
-
-var mapLayer = g.append('g')
-  .classed('map-layer', true);
-
-var dummyText = g.append('text')
-  .classed('dummy-text', true)
-  .attr('x', 10)
-  .attr('y', 30)
-  .style('opacity', 0);
-
-var bigText = g.append('text')
-  .classed('big-text', true)
-  .attr('x', 20)
-  .attr('y', 45);
-
-// Load map data
-d3.json('nyc.geojson', function(error, mapData) {
-  var features = mapData.features;
-
-  // Update color scale domain based on data
-  color.domain([0, d3.max(features, nameLength)]);
-
-  // Draw each province as a path
-  mapLayer.selectAll('path')
-      .data(features)
-    .enter().append('path')
-      .attr('d', path)
-      .attr('vector-effect', 'non-scaling-stroke')
-      .style('fill', fillFn)
-      .on('mouseover', mouseover)
-      .on('mouseout', mouseout)
-      .on('click', clicked);
-});
-
-// Get province name
-function nameFn(d){
-  return d && d.properties ? d.properties.boro_name : null;
-}
-
-// Get province name length
-function nameLength(d){
-  var n = nameFn(d);
-  return n ? n.length : 0;
-}
-
-// Get province color
-function fillFn(d){
-  return color(nameLength(d));
-}
-
-// When clicked, zoom in
-function clicked(d) {
-  var x, y, k;
-
-  // Compute centroid of the selected path
-  if (d && centered !== d) {
-    var centroid = path.centroid(d);
-    x = centroid[0];
-    y = centroid[1];
-    k = 4;
-    centered = d;
-  } else {
-    x = width / 2;
-    y = height / 2;
-    k = 1;
-    centered = null;
-  }
-
-  // Highlight the clicked province
-  mapLayer.selectAll('path')
-    .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
-
-  // Zoom
-  g.transition()
-    .duration(750)
-    .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
-}
-
-function mouseover(d){
-  // Highlight hovered province
-  d3.select(this).style('fill', 'orange');
-
-  // Draw effects
-  textArt(nameFn(d));
-}
-
-function mouseout(d){
-  // Reset province color
-  mapLayer.selectAll('path')
-    .style('fill', function(d){return centered && d===centered ? '#D5708B' : fillFn(d);});
-
-  // Remove effect text
-  effectLayer.selectAll('text').transition()
-    .style('opacity', 0)
-    .remove();
-
-  // Clear province name
-  bigText.text('');
-}
-
-// Gimmick
-// Just me playing around.
-// You won't need this for a regular map.
-
-var BASE_FONT = "'Helvetica Neue', Helvetica, Arial, sans-serif";
-
-var FONTS = [
-  "Open Sans",
-  "Josefin Slab",
-  "Arvo",
-  "Lato",
-  "Vollkorn",
-  "Abril Fatface",
-  "Old StandardTT",
-  "Droid+Sans",
-  "Lobster",
-  "Inconsolata",
-  "Montserrat",
-  "Playfair Display",
-  "Karla",
-  "Alegreya",
-  "Libre Baskerville",
-  "Merriweather",
-  "Lora",
-  "Archivo Narrow",
-  "Neuton",
-  "Signika",
-  "Questrial",
-  "Fjalla One",
-  "Bitter",
-  "Varela Round"
-];
-
-function textArt(text){
-  // Use random font
-  var fontIndex = Math.round(Math.random() * FONTS.length);
-  var fontFamily = FONTS[fontIndex] + ', ' + BASE_FONT;
-
-  bigText
-    .style('font-family', fontFamily)
-    .text(text);
-
-  // Use dummy text to compute actual width of the text
-  // getBBox() will return bounding box
-  dummyText
-    .style('font-family', fontFamily)
-    .text(text);
-  var bbox = dummyText.node().getBBox();
-
-  var textWidth = bbox.width;
-  var textHeight = bbox.height;
-  var xGap = 3;
-  var yGap = 1;
-
-  // Generate the positions of the text in the background
-  var xPtr = 0;
-  var yPtr = 0;
-  var positions = [];
-  var rowCount = 0;
-  while(yPtr < height){
-    while(xPtr < width){
-      var point = {
-        text: text,
-        index: positions.length,
-        x: xPtr,
-        y: yPtr
-      };
-      var dx = point.x - width/2 + textWidth/2;
-      var dy = point.y - height/2;
-      point.distance = dx*dx + dy*dy;
-
-      positions.push(point);
-      xPtr += textWidth + xGap;
-    }
-    rowCount++;
-    xPtr = rowCount%2===0 ? 0 : -textWidth/2;
-    xPtr += Math.random() * 10;
-    yPtr += textHeight + yGap;
-  }
-
-  var selection = effectLayer.selectAll('text')
-    .data(positions, function(d){return d.text+'/'+d.index;});
-
-  // Clear old ones
-  selection.exit().transition()
-    .style('opacity', 0)
-    .remove();
-
-  // Create text but set opacity to 0
-  selection.enter().append('text')
-    .text(function(d){return d.text;})
-    .attr('x', function(d){return d.x;})
-    .attr('y', function(d){return d.y;})
-    .style('font-family', fontFamily)
-    .style('fill', '#777')
-    .style('opacity', 0);
-
-  selection
-    .style('font-family', fontFamily)
-    .attr('x', function(d){return d.x;})
-    .attr('y', function(d){return d.y;});
-
-  // Create transtion to increase opacity from 0 to 0.1-0.5
-  // Add delay based on distance from the center of the <svg> and a bit more randomness.
-  selection.transition()
-    .delay(function(d){
-      return d.distance * 0.01 + Math.random()*1000;
-    })
-    .style('opacity', function(d){
-      return 0.1 + Math.random()*0.4;
-    });
-}
-
-</script>
+<iframe width="1000" height="521" src="https://vizhub.com/yunyuntian/4697a58d8ae34f8d94c697574846156d?mode=embed" title="6. Interactive Components" frameborder="0">
+</iframe>
 
 </div>
             </section>
