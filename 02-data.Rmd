@@ -1,2 +1,16 @@
 # Data sources
 
+Our data originated from New York Police Department (NYPD) Motor Vehicle Collisions webpage:  https://www1.nyc.gov/site/nypd/stats/traffic-data/traffic-data-collision.page
+
+This is a dataset recording motor vehicle collisions information. It is updated on a monthly basis and spans from January to October 2021.
+
+The dataset consists of three parts: collision details (number of vehicles damaged, number of individuals injured or killed), vehicle type descriptions, and contributing factors; each part is recorded in a separate tab.
+
+There's no documentation on how the data is collected, but our guess is that this data is generated from some database of the police system.
+
+The first tab is "GeoCollisions_1", recording motor vehicle collisions' basic information, with 14 features and 83 entries. The 14 features include Geographical Code and label,number of vehicles involved in collisions, number of bicycles involved in collisions, number of people involved, and number of injured/killed individuals under 4 categories: pedestrians, motorists, cyclists, and passengers. There are 3 types of entries, from levels of each precinct, to each borough, to citywide information. The 1 citywide entry, 5 borough entry, and 77 precinct entry composed the dataset. Data at each level is summed up and passed to the upper level.
+
+The second tab is "GeoVehicles_2", recording different types of vehicles involved in collisions, and numbers of them. The 865 data entries was made following the same format of the "GeoCollisions_1" tab: summing up from precincts to boroughs to citywide total. There are 865 entries instead of 83 entries because types of vehicles are taken into account. This dataset was not utilized in our research due to the scope of the project.
+
+The third tab is "GeoContributingFactors_3", recording the counts of contributing factors of collisions. There are 30 types of contributing factors spreading across 83 geolocations, resulting 1323 entries. We need to notice that 30 * 83 != 1323, this is because of existence of NAs in our dataset. However, we managed to merge some of our data to skip the filling NA step, which will be mentioned in the Data Transformation session.
+
