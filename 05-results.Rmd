@@ -133,7 +133,7 @@ The above graph presents the top 20 precincts with the highest severe accidents 
 At this point, we can answer our first question:
 
 - **Brooklyn** and **Queens** involved with more car accidents.
-- The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**.
+- Among those car accidents, precincts in **Brooklyn** and **Manhattan** have more severe collisions.
 
 
 ## What causes severe vehicle crashes? 
@@ -287,7 +287,7 @@ Regarding wrong-way driving, **failure to yield the right-of-way** accounts for 
 At this point, we can answer our second question:
 
 - **Distracted driving** and **wrong-way driving & Improper turns** are the two leading causes of accidents in NYC.
-- The distribution of causes varies by location. In particular, **wrong-way driving** is the leading cause in **Queens**, while **distracted driving** is the leading cause in the other four.
+- The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**.
 
 
 
