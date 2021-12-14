@@ -136,7 +136,6 @@ At this point, we can answer our first question:
 - The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**.
 
 
-
 ## What causes severe vehicle crashes? 
 
 ### Overview
@@ -150,23 +149,33 @@ Car collisions are often stressful, unpleasant, and traumatic events. They occur
 
 We are going to identify the primary causes of serious car accidents in New York City. The graph below displays the most common causes of serious accidents. The label on the right side of the bar indicates the actual number of vehicles involved in these serious incidents.
 
+
 ```{r echo = F, fig.width=10}
-cfct %>%
+cfct2 <- cfct %>%
   filter(GeoCodeLabel == 'CITYWIDE') %>%
   group_by(ContributingFactorGroup) %>%
   summarise(Num = sum(Number_of_Vehicles)) %>%
-  mutate(pct = round(prop.table(Num)*100, 2)) %>%
-  ggplot(aes(x = pct, y = fct_reorder(ContributingFactorGroup, Num)))+
-  geom_bar(stat = 'identity')+
-  geom_text(aes(label=Num), hjust = -0.1, size=3) +
-  xlab('Percentage of Vehicles')+
-  ylab('Causes')+
-  ggtitle('Causes in Injury and Fatal collisions \n (citywide)')+
-  theme_minimal(16)+
-  theme(panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank())
+  mutate(pct = round(prop.table(Num)*100, 2)) %>% 
+  arrange(desc(pct))
+
+labels = cfct2$Num
+
+hchart(cfct2, "bar", hcaes(x='ContributingFactorGroup', y = 'pct'),, dataLabels = list(
+  enabled = TRUE,
+  formatter = JS(
+    "function() {
+      var labels = ['2789', '2389' ,'1226',  '414',  '352',  '241',  '161',   '70',   '66',   '41'];
+      return labels[this.point.x];
+    }"
+  ))) %>% 
+  hc_xAxis(title = list(text = "Causes"))%>%
+  hc_yAxis(title = list(text = "Percentage of Vehicles (labeled with counts)")) %>%
+  hc_title(text = "<b>Causes in Injury and Fatal Collisions \n (Citywide)") %>%
+  hc_exporting(enabled = TRUE) 
+
 
 ```
+
 
 As shown in the graph above, **distracted driving** and **wrong-way driving & improper turns** are the two leading causes of severe road accidents in New York City, accounting for over 4000 vehicles (>65%) involved in serious accidents. Distractions behind the wheel can occur for a variety of reasons. Using a cellphone while driving, as well as eating food or drinking while driving, are some of the major causes of distracted driving accidents. Accidents also occur when people fail to yield right-of-way, turn signals correctly, or follow traffic signals.
 
@@ -175,7 +184,7 @@ As shown in the graph above, **distracted driving** and **wrong-way driving & im
 **Illness/disability**, **drowsy driving**, and **reckless driving** cause a relatively small number of crashes.
 
 
-### Is there any geographical variation in the contributing factors?
+### Geographical variation analysis in the contributing factors
 
 Previous research has revealed that NYC is not equally safe in all areas, and the proportion of serious car accidents is close to 40%. This raises the question of whether the causes are distributed differently, i.e., is there a link between contributing factors and boroughs? A mosaic plot is ideal for investigating this question. It is worth noting that the width of the columns is proportional to the number of observations in each borough, and the vertical length of the bars (height of each box) is proportional to the number of observations in causes within each borough.
 
@@ -203,7 +212,7 @@ p = cfct %>%
               show.legend = FALSE)+
   xlab('')+
   ylab('')+
-  ggtitle('Relationship between contributing factors and borough')+
+  ggtitle('Relationship between Contributing Factors and Borough')+
   #geom_text(aes(x=GeoCode,y=ContributingFactorGroup,label=pct)) +
   scale_fill_grey()+
   theme_minimal()+
@@ -239,7 +248,7 @@ cfct %>%
   summarise(Num = sum(Number_of_Vehicles)) %>%
   mutate(pct = prop.table(Num)*100,ContributingFactorDescription = tolower(ContributingFactorDescription)) %>%
   ggplot(aes(x = pct, y = fct_reorder(ContributingFactorDescription, Num)))+
-  geom_bar(stat = 'identity')+
+  geom_bar(stat = 'identity', fill = "#60A3D9",width=0.4)+
   geom_text(aes(label=Num),hjust = -0.1, size=3) +
   ylab('Contributing Factors')+
   xlab('Percentage of Vehicles')+
@@ -256,10 +265,10 @@ cfct %>%
   summarise(Num = sum(Number_of_Vehicles)) %>%
   mutate(pct = prop.table(Num)*100,ContributingFactorDescription = tolower(ContributingFactorDescription)) %>%
   ggplot(aes(x = pct, y = fct_reorder(ContributingFactorDescription, Num)))+
-  geom_bar(stat = 'identity')+
+  geom_bar(stat = 'identity', fill = "#60A3D9",width=0.4)+
   geom_text(aes(label=Num ),hjust = -0.1, size=3) +
   ylab('Contributing Factors')+
-  xlab('Percentage of Severe Collisions')+
+  xlab('Percentage of Vehicles')+
   ggtitle('Detailed Contributing Factors of Wrong-way Driving')+
   theme_minimal(15)+
   theme(legend.position='none',
@@ -269,6 +278,7 @@ cfct %>%
 
 ```
 
+
 Over 95% of distracted driving is caused by the **driver's inattention**. Besides, external distractions such as billboards and advertising may cause certain motorists to become distracted. Furthermore, passengers' distractions could occur on ride-sharing services such as Uber and Lyft.
 
 Regarding wrong-way driving, **failure to yield the right-of-way** accounts for almost one-third of all incidents. Yielding the right of way refers to allowing another vehicle to enter an intersection first. The goal is to reduce the possibility of accidents in less controlled areas or areas with no traffic lights. Failure to do so may result in serious accidents. In addition, more than 20% of wrong-way driving is caused by **improper passing or lane usage**, which occurs when a passing driver forces another driver off the road or when a driver changes lanes but forces the driver currently in that lane to brake. Improper passing or changing lanes can result in serious injury or fatal collisions.
@@ -277,7 +287,7 @@ Regarding wrong-way driving, **failure to yield the right-of-way** accounts for 
 At this point, we can answer our second question:
 
 - **Distracted driving** and **wrong-way driving & Improper turns** are the two leading causes of accidents in NYC.
-- The distribution of causes varies by location. **Distracted driving** incidents are significantly higher in **Brooklyn**, **Manhattan**, and **Staten Island**. 
+- The distribution of causes varies by location. In particular, **wrong-way driving** is the leading cause in **Queens**, while **distracted driving** is the leading cause in the other four.
 
 
 
@@ -364,7 +374,7 @@ typeCounts  %>%
 
 From this stacked bar chart of proportions, we find that the distribution of different types of transportation almost remains the same across different boroughs at New York, that driver takes about 40% of individual counts, passenger takes about 30%, Pedestrians take about 20%, and Cyclist would take the rest 10%. However, there are some abnormal cases which we would neglect in this section and talk more about in the Conclusion.
 
-### Survive rate Analysis
+### Survival rate Analysis
 As discovered above that a general pattern is followed across different boroughs in New York, we would reluctantly merge the injured/killed counts and look deeply into the injuries and kills of different types of individuals. Which type will most likely get killed?
 
 ```{r}
@@ -375,6 +385,7 @@ conditionDF <- conditionDF  %>%
 
 
 conditionDF%>%
+  arrange(desc(number)) %>%
   hchart('column', hcaes(x='type', y = 'number', group = 'condition'),stacking="number") %>%
   hc_chart(zoomType = "x") %>%
   hc_legend(title = list(text = "Type",style=list(fontSize='14px')),
@@ -384,7 +395,7 @@ conditionDF%>%
                         rotation = -10, step = 1)) %>%
   hc_yAxis(title = list(text = "Number of Individuals (Log)"),type = "logarithmic") %>%
   hc_title(text = "<b>Injured and Killed Individuals at Different Positions during Collisions</b>") %>%
-  hc_subtitle(text = "Click on the legend to show percentage of involved individuals for selected type") %>%
+  hc_subtitle(text = "Click on the legend to show number of involved individuals for selected type") %>%
   hc_exporting(enabled = TRUE)
 
 ```

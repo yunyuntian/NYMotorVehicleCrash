@@ -23,3 +23,5 @@ overall-patterns
 survive-rate-analysis
 link-to-the-map
 description-and-instruction
+geographical-variation-analysis-in-the-contributing-factors
+survival-rate-analysis
